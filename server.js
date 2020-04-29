@@ -8,19 +8,11 @@ var app = express()
 app.use(cors()) // enable cors
 app.use(express.static('.'))
 
-var idToTitle = JSON.parse(fs.readFileSync("data/idToTitle.json"))
-var titleToId = {}
-for (let id in idToTitle) {
-  titleToId[idToTitle[id].title] = Number(id)
-}
-
 app.get('/', function(req, res){
-  readFile("data/ratings.json")
+  readFile("data/IPEDS_data.json")
   .then(raw  => {
-    let ratingData = JSON.parse(raw)
-    res.send({"ratingData":ratingData,
-              "idToTitleDict":idToTitle, 
-              "titleToIdDict":titleToId})
+    let jsonTuples = JSON.parse(raw)
+    res.send(jsonTuples)
   })
   .catch( e => { console.log(e) })
 })
@@ -28,5 +20,5 @@ app.get('/', function(req, res){
 app.post
 
 app.listen(8080, function() {
-  console.log("A4 Data Server is running at localhost: 8080")
+  console.log("Final Project Data Server is running at localhost: 8080")
 })
