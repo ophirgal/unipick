@@ -1,0 +1,75 @@
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+#r_table {
+  visibility:hidden;
+}
+
+#t1{
+  visibility:hidden;
+}
+
+#but {
+  background-color: white; /* Green */
+  transition: .5s ease;
+   left: 100px;
+   top: 230px;
+   border: 2px solid #555555;
+  color: black;
+  padding: 5px 22px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 13px;
+  transition-duration: 0.4s;
+
+}
+
+#but:hover {
+  background-color:  #555555; /* Green */
+  color: white;
+}
+
+#but2 {
+  background-color: white; /* Green */
+  transition: .5s ease;
+   left: 249px;
+   top: 230px;
+   border: 2px solid #555555;
+  color: black;
+  padding: 5px 22px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 13px;
+  transition-duration: 0.4s;
+
+}
+
+#but2:hover {
+  background-color:  #555555; /* Green */
+  color: white;
+}
+
+#but3 {
+  background-color: white; /* Green */
+  transition: .5s ease;
+  left: 400px;
+  top: 230px;
+  border: 2px solid #555555;
+  color: black;
+  padding: 5px 22px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 13px;
+  transition-duration: 0.4s;
+
+}
+
+#but3:hover {
+  background-color:  #555555; /* Green */
+  color: white;
+}
