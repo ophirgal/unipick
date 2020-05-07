@@ -1,3 +1,16 @@
+// global state list
+var stateList = ["Alabama", "Alaska", "Arizona", "Arkansas", "California", 
+                 "Colorado", "Connecticut", "Delaware", "District of Columbia",
+                 "Florida", "Georgia", "Hawaii", "Idaho", "Illinois",
+                 "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana",
+                 "Maine", "Montana", "Nebraska", "Nevada", "New Hampshire",
+                 "New Jersey", "New Mexico", "New York", "North Carolina",
+                 "North Dakota", "Ohio", "Oklahoma", "Oregon", "Maryland",
+                 "Massachusetts", "Michigan", "Minnesota", "Mississippi",
+                 "Missouri", "Pennsylvania", "Rhode Island", 
+                 "South Carolina", "South Dakota", "Tennessee", "Texas",
+                 "Utah", "Vermont", "Virginia", "Washington",
+                 "West Virginia", "Wisconsin", "Wyoming"]
 submitForm()  // Submit form to immediately generate viz upon webpage load
 
 /*
@@ -21,22 +34,29 @@ submitForm()  // Submit form to immediately generate viz upon webpage load
 
 function submitForm(centerPerson=0){
   // Fetch data from the server and render visualization
-  // fetch('http://localhost:8080/').then(function(response) { 
-  //   response.json()
-  //   .then(dataDict => {
-  //     renderMapViz()
-  //   })
-  //   .catch(e => console.log(e))
-  // })
-  renderMapViz()
+  fetch('http://localhost:8080/').then(function(response) { 
+    response.json()
+    .then(jsonData => {
+      let filters = {};
+      filters.selectedStates = getSelectedStates()
+      renderMapViz(schoolData=jsonData.ipeds_data, geoData=jsonData.geo_data,
+                   filters=filters)
+    })
+    .catch(e => console.log(e))
+  })
 }
 
-function getSelectedMovieIDs(){
-  let selectedMovieIDs = []
-  for (let listItem of document.getElementsByClassName('selected-movie')){
-    selectedMovieIDs.push(titleToId[listItem.innerHTML])
+function _trimButton(listItemString){
+  let indexOfCaret = listItemString.indexOf('<')
+  return listItemString.slice(0, indexOfCaret)
+}
+
+function getSelectedStates(){
+  let selectedStates = []
+  for (let listItem of document.getElementsByClassName('selected-state')){
+    selectedStates.push(_trimButton(listItem.innerHTML))
   }
-  return selectedMovieIDs
+  return selectedStates
 }
 
 function starSliderChange(value){
@@ -71,7 +91,38 @@ function displayNumUsers(value) {
 }
 
 // =================== code for handling state selection ====================
+function selectState(){
+  let valueEntered = document.getElementById('stateInput').value
+  let selectedStates = document.getElementById('selectedStates')
+  if (stateList.includes(valueEntered)
+      && (!selectedStates.innerHTML.includes(valueEntered))) {
+    selectedStates.innerHTML += 
+      `<li class="selected-state" id="selected-${valueEntered}">` + 
+      valueEntered +
+      `<span>&nbsp;&nbsp;</span><button type="button" class="remove-button"
+      onclick="deselectListItem('${valueEntered}')">` +
+      '&#215;</button>' + '</li>' 
+  }
+}
 
+// =================== code for handling school selection ====================
+function selectSchool(school){
+  let selectedSchools = document.getElementById('selectedSchools')
+  if (!selectedSchools.innerHTML.includes(school.Name)) {
+    selectedSchools.innerHTML += 
+      `<li class="selected-school" id="selected-${school.Name}">` + 
+      school.Name +
+      `<span>&nbsp;&nbsp;</span><button type="button" class="remove-button"
+      onclick="deselectListItem('${school.Name}')">` +
+      '&#215;</button>' + '</li>' 
+  }
+}
+
+function deselectListItem(itemName){
+  var listItem = document.getElementById(`selected-${itemName}`);
+  listItem.parentNode.removeChild(listItem);
+  submitForm()
+}
 
 /*
  * ============================================================================
@@ -85,14 +136,6 @@ function displayNumUsers(value) {
  * ============================================================================
  */
 
-function isNeighborLink(node, link) {
-  return link.target.id === node.id || link.source.id === node.id
-}
-
-function getLinkColor(node, link) {
-  return isNeighborLink(node, link) ? 'green' : '#E5E5E5'
-}
-
 /**
  * ============================================================================
  * ========================= End Utility Functions ============================
@@ -103,9 +146,14 @@ function getLinkColor(node, link) {
  * ============================= Main Function ================================
  * ============================================================================
  */
-function renderMapViz() {
-  // Remove potential pre-existing chart
-  document.getElementById("viz").innerHTML = "Hey";
+function renderMapViz(schoolData, geoData, filters) {
+  // Color values
+  let default_state_color = "rgb(213,222,217)"
+  let selected_school_color = "rgb(102,51,153)"
+  let selected_state_color = "rgb(185, 191, 255)"
+
+  // Remove pre-existing content in #viz
+  document.getElementById("viz").innerHTML = "";
 
   // Define width and height for SVG/visualization
   var width = window.innerWidth/1.1 * 0.75
@@ -128,10 +176,10 @@ function renderMapViz() {
 
       
   // Define linear scale for output
-  var color = d3.scale.linear()
-          .range(["rgb(213,222,217)","rgb(69,173,168)","rgb(84,36,55)","rgb(217,91,67)"]);
+  var color = d3.scale.linear().range([selected_school_color,
+                                       selected_state_color]);
 
-  var legendText = ["Schools", "...", "Selected States", "..."];
+  var legendText = ["Selected States", "Schools"];
           
   // Append Div for tooltip to SVG
   var div = d3.select("body")
@@ -139,88 +187,66 @@ function renderMapViz() {
           .attr("class", "tooltip")               
           .style("opacity", 0);
 
-  // Load in my states data!
-  d3.csv("https://raw.githubusercontent.com/Ophir-Gal/unipick/master/data/stateslived.csv", function(data) {
-  color.domain([0,1,2,3]); // setting the range of the input data
+  // setting the range of the input data
+  color.domain([0,1]); // color.domain([0,1,2,3]); 
   
-  // Load GeoJSON data and merge with states data
-  d3.json("https://gist.githubusercontent.com/michellechandra/0b2ce4923dc9b5809922/raw/a476b9098ba0244718b496697c5b350460d32f99/us-states.json", function(json) {
-  
-  // Loop through each state data value in the .csv file
-  for (var i = 0; i < data.length; i++) {
-
-    // Grab State Name
-    var dataState = data[i].state;
-
-    // Grab data value 
-    var dataValue = data[i].visited;
-
-    // Find the corresponding state inside the GeoJSON
-    for (var j = 0; j < json.features.length; j++)  {
-      var jsonState = json.features[j].properties.name;
-
-      if (dataState == jsonState) {
-
-      // Copy the data value into the JSON
-      json.features[j].properties.visited = dataValue; 
-
-      // Stop looking through the JSON
-      break;
-      }
-    }
+  // loop through the geo-data states to mark them as selected (light blue)
+  for (var j = 0; j < geoData.features.length; j++)  {
+    var geoState = geoData.features[j].properties.name;
+    // Copy the data value into the JSON
+    geoData.features[j].properties.visited = 
+      filters.selectedStates.includes(geoState) ? 1 : 0;
   }
       
   // Bind the data to the SVG and create one path per GeoJSON feature
   svg.selectAll("path")
-    .data(json.features)
+    .data(geoData.features)
     .enter()
     .append("path")
     .attr("d", path)
     .style("stroke", "#fff")
     .style("stroke-width", "1")
     .style("fill", function(d) {
-
-    // Get data value
-    var value = d.properties.visited;
-
-    if (value) {
-    //If value exists…
-    return color(value);
-    } else {
-    //If value is undefined…
-    return "rgb(213,222,217)";
-    }
-  });
+      let value = d.properties.visited;
+      return value ? color(value) : default_state_color;
+    });
 
       
-  // Map the cities I have lived in!
-  d3.csv("https://raw.githubusercontent.com/Ophir-Gal/unipick/master/data/cities-lived.csv", function(data) {
-  
-  svg.append("g")
+  // Map the selected schools
+  var schoolElements = svg.append("g")
     .attr("class", "nodes")
     .selectAll("use")
-    .data(data)
+    .data(schoolData)
     .enter()
     .append("use")
+     // filter for selected state
+    .filter(d => filters.selectedStates.length === 0 ?
+      true : filters.selectedStates.includes(d['State abbreviation']))
     .attr("href", "#school-icon-g")
     .attr("transform", "translate(-10,-10)")
     .attr("x", function(d) {
-      return projection([d.lon, d.lat])[0];
+      return projection([d["Longitude location of institution"],
+                         d["Latitude location of institution"]])[0];
     })
     .attr("y", function(d) {
-      return projection([d.lon, d.lat])[1];
+      return projection([d["Longitude location of institution"],
+                         d["Latitude location of institution"]])[1];
     })
-    .style("fill", "rgb(217,91,67)")	
-    .style("opacity", 0.85)	
+    .style("fill", "rgb(102,51,153)")	
+    .style("opacity", 0.65)	
+    .on("click", d => selectSchool(d))   
     // Modification of custom tooltip code provided by Malcolm Maclean, "D3 Tips and Tricks" 
     // http://www.d3noob.org/2013/01/adding-tooltips-to-d3js-graph.html
     .on("mouseover", function(d) {      
         div.transition()        
             .duration(200)      
             .style("opacity", .9);      
-            div.text(d.place)
-            .style("left", (d3.event.pageX) + "px")     
-            .style("top", (d3.event.pageY - 28) + "px");    
+            div.text(d.Name)
+            .style("left", (d3.event.pageX + 10) + "px")     
+            .style("top", (d3.event.pageY - 28) + "px"); 
+        schoolElements.style('opacity', s => s.Name == d.Name ? 1 : 0.65);
+        schoolElements.style('fill', s => s.Name == d.Name ? 'black' : 'rgb(102,51,153)');
+        schoolElements.style('z-index', s => s.Name == d.Name ? 20 : 1);
     })   
     // fade out tooltip on mouse out               
     .on("mouseout", function(d) {       
@@ -228,32 +254,28 @@ function renderMapViz() {
           .duration(500)      
           .style("opacity", 0);   
     });
-  });  
           
   // Modified Legend Code from Mike Bostock: http://bl.ocks.org/mbostock/3888852
   var legend = d3.select("body").append("svg")
               .attr("class", "legend")
             .attr("width", 140)
             .attr("height", 200)
-            .attr("transform", "translate(270,230)")
+            .attr("transform", "translate(270,300)")
             .selectAll("g")
             .data(color.domain().slice().reverse())
             .enter()
             .append("g")
-            .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+            .attr("transform", (d, i) => "translate(0," + i * 20 + ")");
 
-      legend.append("rect")
-          .attr("width", 18)
-          .attr("height", 18)
-          .style("fill", color);
+  legend.append("rect")
+      .attr("width", 15)
+      .attr("height", 15)
+      .style("fill", color);
 
-      legend.append("text")
-          .data(legendText)
-            .attr("x", 24)
-            .attr("y", 9)
-            .attr("dy", ".35em")
-            .text(function(d) { return d; });
-    });
-
-  });
+  legend.append("text")
+      .data(legendText)
+        .attr("x", 24)
+        .attr("y", 9)
+        .attr("dy", ".35em")
+        .text(function(d) { return d; });
 }

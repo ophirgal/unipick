@@ -11,8 +11,8 @@ app.use(express.static('.'))
 app.get('/', function(req, res){
   readFile("data/IPEDS_data_extended.json")
   .then(raw  => {
-    let jsonTuples = JSON.parse(raw)
-    res.send(jsonTuples)
+    let jsonData = JSON.parse(raw)
+    res.send(jsonData)
   })
   .catch( e => { console.log(e) })
 })

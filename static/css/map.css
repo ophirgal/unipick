@@ -8,7 +8,7 @@ div.tooltip {
  	position: absolute;           
 	text-align: center;           
 	width: 60px;                  
-	height: 28px;                 
+	height: auto;                 
 	padding: 2px;             
 	font: 12px sans-serif;        
 	background: white;   
@@ -23,6 +23,31 @@ div.tooltip {
 	left:800px;
     top:350px;
     font: 11px sans-serif;
+    
+}
+
+.remove-button {
+    border-radius: 100%;
+    font-size: 12pt !important;
+}
+.remove-button:hover {
+    background: darkgray;
+}
+
+.dynamic-list { 
+    background-color: rgb(185, 191, 255);
+    height: 60px; 
+    overflow-x: hidden; 
+    overflow-x: auto; 
+    text-align: left; 
+    list-style: inside;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 0 1px rgba(255, 255, 255, .5);
+    font-size: 10pt;
+    -moz-box-shadow:    inset 0 0 5px black;
+    -webkit-box-shadow: inset 0 0 5px black;
+    box-shadow:         inset 0 0 5px black;
 }
 
 /* ====================================================================== */
@@ -94,21 +119,6 @@ ul.tooltip {
 }
 #numSimilarUsers {
     width: 100%;
-}
-#selectedMovies { 
-    background-color: lightsteelblue;
-    height: 110px; 
-    overflow-x: hidden; 
-    overflow-x: auto; 
-    text-align: left; 
-    list-style: inside;
-    padding: 10px;
-    border-radius: 10px;
-    box-shadow: 0 0 1px rgba(255, 255, 255, .5);
-    font-size: 10pt;
-    -moz-box-shadow:    inset 0 0 5px black;
-    -webkit-box-shadow: inset 0 0 5px black;
-    box-shadow:         inset 0 0 5px black;
 }
 
 ol#autocomplete-results, ul#autocomplete-results {

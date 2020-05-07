@@ -31,11 +31,11 @@
           <input type="range" id="numSimilarUsers" name="numSimilarUsers" min="0" max="100"
           step="1" value="10" onmousemove="displayNumUsers(document.getElementById('numSimilarUsers').value)">
           <br><br>
-          <label for="movieTitle">Select a State:</label><br>
+          <label for="states">Select a State:</label><br>
           <form action="">
-            <input list="states" name="state">
-            <datalist id="states">
-              <option value="Alabama">
+            <input id="stateInput" list="stateList" name="state">
+            <datalist id="stateList">
+                <option value="Alabama">
                 <option value="Alaska">
                 <option value="Arizona">
                 <option value="Arkansas">
@@ -87,21 +87,30 @@
                 <option value="Wisconsin">
                 <option value="Wyoming">
             </datalist>
-            <input type="submit">
+            <input type="submit" onclick="selectState()">
           </form>         
           <div>
             <p>Selected States</p>
-            <ul id="selectedMovies" name="selectedMovies">
-              <li class="selected-movie">Alabama</li>
-              <li class="selected-movie">Maryland</li>
-              <li class="selected-movie">New York</li>
-              <li class="selected-movie">California</li>
-              <li class="selected-movie">Virginia</li>
+            <ul id="selectedStates" name="selectedStates" class="dynamic-list">
             </ul>
             <input type="submit" value="Clear State List"
-             onclick="document.getElementById('selectedMovies').innerHTML=''; 
+             onclick="document.getElementById('selectedStates').innerHTML=''; 
                       submitForm()">
           </div> 
+          <div>
+            <p>Selected Schools</p>
+            <ul id="selectedSchools" name="selectedSchools"
+               class="dynamic-list"
+               style="background-color: rgb(139, 116, 189);">
+            </ul>
+            <input type="submit" value="Clear School List"
+             onclick="document.getElementById('selectedSchools').innerHTML=''; 
+                      submitForm()">
+          </div> 
+          <p style="text-align: center;"><br>
+          <input type="submit" value="Compare Schools!" 
+            style="font-weight: bold; font-size: 14pt;" onclick="">
+          </p>
         </form>
       </td>
       <td id="vizColumn">
