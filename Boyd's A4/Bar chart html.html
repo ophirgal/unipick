@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>A4: Implementing Visulaizations in D3.js </title>
+  <script src="./static/js/d3.js"></script>
+  <link rel="stylesheet" type="text/css" href="./static/css/a2.css">
+  <script src="./static/js/createTable.js"></script>
+
+</head>
+
+<body>
+  <h1>Covid-19 Data from States in the US</h1>
+  <h2 id = "t1"></h2>
+
+  <div id="background" align=left class="bold">
+     Covid-19 resources, cost, inflection rate, death rate, and other factors varies by cross States in the US. In order to understand how each U.S. state compares across various  <br>
+     Covid-19 factors, this graph was created. The dataset used can be found here: https://www.kaggle.com/nightranger77/covid19-state-data
+     <br>
+     <br>
+     <br>
+
+
+  </div>
+
+  <div id="Instr" align=center class="bold">
+        <b> Select from the dropdown menu which Covid-19 data you would like to explore.         </b> <br>
+          As you click and deselect data bars in the graph, a summary of the selected data is generated below.
+  </div>
+ <div id="drop" align=center></div>
+
+ <div id="background" align=left class="bold">
+  <b>  Organize Data By: </b>
+ </div>
+ <button type="button" id = "but" align=left>Ascending Order</button>
+ <button type="button" id = "but2" align=left>Descending Order</button>
+ <button type="button" id = "but3" align=left>By State Name</button>
+
+ <div id="background" align=left class="bold">
+
+    <br>
+    <br>
+    <br>
+
+
+ </div>
+
+
+ <div class="hov">
+
+ </div>
+  <svg  class = "chart" id="vis" width="1200" height="1200" align = center></svg>
+
+  <h1>Summary of Selected States</h1>
+  <table class="objecttable" id = "r_table">
+  <thead>
+  <tr><th id = "id1"></th><th id = "id2"></th></tr>
+  </thead>
+  <tbody></tbody>
+ </table>
+
+  <script src="./static/js/bar_chart.js"></script>
+
+
+  <div id="background" align=left class="bold">
+     <p> <h1>Write up</h1>
+
+       <b>An overview of my development process</b> <br> <br>
+
+
+        This project took me approximately 3 days, including working at least 6 hours a day to complete. There were many hard and time-consuming aspects to completing the project. The first being selecting a dataset. I didn't expect for it to take as long as it did, however, I spent hours searching through available datasets. The challenge was finding a dataset that was interesting to me, useful to others, and suitable for a bar chart. I was aiming to create a bar chart because that is the graph of D3 that I wanted to improve my skills on as one of my incoming internships will require me to parse data and create bar chart visuals. With this project I practiced having a topic area and requested graph form. The topic area selected was Covid-19 and the graph type were a bar chart. I found it very hard working within these bounds because there are so many Covid-19 datasets, but some of them are not conducive to bar charts. To combat this challenge, I thought about what we learned in class about not trying to give the user all the data available, but instead of marking use the important aspects of the data. I selected the topics to focus on based on how much coverage that data received in the news. For example, I included data such as the number of hospitals within a state, the number of doctors, and number of Covid-19 cases because from my personal observation of news media these are area of constant discussion and coverage. I wanted my user to be able to hear something on the news and place it in perspective or verify it quickly using my chart.
+
+Another challenging area was implementing the display of the data when the user hovers over the bars. This took the most time mainly because many of D3 tutoring online included importing a library call "tooltip", however, I was unable to install the library successful and get it working. I attempted to do so for hours because I thought the data on hovering was a key feature considering it can hard to quickly line up the top of a data bar with the y axis tick marks to observe the data value. What I ended up doing to complete this was creating a div element and updating its text and position based on the user’s mouse position. But, when I first successful implemented this, I "broke" the changing color feature. My bars were alternating randomly between green, red, and yellow. It took me another night to figure out how to fix that. It required that I store the names of the states selected by the user and use the to determine the color that each bar should be and when.
+
+The final eliminate that took a few hours was implementing the three buttons to sort the data. This took a while because I needed to determine the best way to update the table once the buttons were pressed. Ordering it by state was very easy, because we learned how to do one A2, but ordering it in ascending and descending order was more challenging. The challenge was that I had to parse the data by a dynamic value, because the graph allows the user to change which data is being shown.
+
+Although my project took about three days and sorting the data, selecting a dataset, and implementing displaying text based on hovering took the most time, I really enjoyed creating this visual.
+
+<br><br>
+ <b>A rational of my design process</b> <br> <br>
+Quick access to data is why I choose to include a summary of the states selected in a chart. I thought about what if someone wanted to share the data about two states quickly, how could I implement that. The considered to options in achieving that. One, creating a display feature so that when you select are bar chart, it would have a small text box above it is displaying the state name and the value of the attribute. The other option was to store all the selected options in the table. I chose the ladder because if the user selected states that were close to together on the chart then the box may overlap causing the visual to become overwhelming to view. In addition, I felt the table was easier to share. For example, the user could screenshot the table and share that data quickly with others.
+
+Another key decision I had to make was to use dynamic search queries or drop-down menus when allowing the user to select which data to observe. At first, I wanted to do dynamic search queries, in which the user typed in the data that they wanted to see. However, I realized that would be in effect because then I would have to list out all the data options available and the search wouldn't work if the user misspelled something. Therefore, I decided to do the drop-down menu in order to avoid the issues that a search bar presented. In addition, I think the drop-down method is effective because I didn't have a large and overwhelming list of options to select from.
+
+When determining how to display the data. I thought about simply sorting that data based on state name in alphabetical order, in order to make it easier for the viewer to locate the state or states of their interest. But then I also thought about how it could be useful to a user to view the data in ascending and descending order if looking to see which states had the highest or lowest of an attribute. Therefore, I decided to make the choice of how the data is sorted up to the user.
+
+
+</p>
+
+  </div>
+
+</body>
+</html>
