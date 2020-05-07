@@ -29,6 +29,7 @@ div.tooltip {
 .remove-button {
     border-radius: 100%;
     font-size: 12pt !important;
+    outline: none;
 }
 .remove-button:hover {
     background: darkgray;
@@ -43,12 +44,26 @@ div.tooltip {
     text-align: left; 
     list-style: inside;
     padding: 10px;
-    border-radius: 10px;
+    margin: 2.5px 0px 5px 0px;
+    border-radius: 0px;
     box-shadow: 0 0 1px rgba(255, 255, 255, .5);
     font-size: 10pt;
     -moz-box-shadow:    inset 0 0 5px black;
     -webkit-box-shadow: inset 0 0 5px black;
     box-shadow:         inset 0 0 5px black;
+}
+
+.clearButton {
+    border-radius: 5%;
+    outline: 0;
+}
+
+#stateInput {
+    display: inline;
+}
+
+.filter {
+    margin: 10px 0px 10px 0px;
 }
 
 /* ====================================================================== */
@@ -71,7 +86,7 @@ body {
     width: 75% !important;
 }
 #formColumn {
-    padding: 25px; 
+    padding: 15px; 
     text-align: left;
 }
 #btmTable, th, td {

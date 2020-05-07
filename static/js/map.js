@@ -15,19 +15,6 @@ submitForm()  // Submit form to immediately generate viz upon webpage load
 
 /*
  * ============================================================================
- * ================== Begin Data Processing Functions =====================
- * ============================================================================
- */
-
-
-/*
- * ============================================================================
- * ================== End Data Processing Functions =====================
- * ============================================================================
- */
-
-/*
- * ============================================================================
  * ================== Begin Form Event Handling Functions =====================
  * ============================================================================
  */
@@ -37,8 +24,10 @@ function submitForm(centerPerson=0){
   fetch('http://localhost:8080/').then(function(response) { 
     response.json()
     .then(jsonData => {
-      let filters = {};
-      filters.selectedStates = getSelectedStates()
+      let filters = getFilters();
+      console.log(filters.minPercentAdmin)
+      console.log(typeof(filters.minPercentAdmin))
+
       renderMapViz(schoolData=jsonData.ipeds_data, geoData=jsonData.geo_data,
                    filters=filters)
     })
@@ -99,8 +88,9 @@ function starSliderChange(value){
   }
 }
 
-function displayNumUsers(value) {
-  document.getElementById('numUsersDisplay').innerHTML = value
+function displayNum(idGet, idChange) {
+  let value = document.getElementById(idGet).value
+  document.getElementById(idChange).innerHTML = value
 }
 
 // =================== code for handling state selection ====================
@@ -148,6 +138,49 @@ function deselectListItem(itemName){
  * ======================= Begin Utility Functions ============================
  * ============================================================================
  */
+
+function getFilters(){
+  let filters = {}
+  filters.selectedStates = getSelectedStates()
+  filters.minPercentAdmin = document.getElementById('minPercentAdmit').value
+  filters.maxPercentAdmin = document.getElementById('maxPercentAdmit').value
+  filters.maxPriceInState = document.getElementById('maxPriceInState').value
+  filters.maxPriceOutState = document.getElementById('maxPriceOutState').value
+  filters.minSatReading = document.getElementById('minSatReading').value
+  filters.minSatMath = document.getElementById('minSatMath').value
+  filters.masterDegree = document.querySelector('#masterDegree').checked
+  filters.doctorDegree = document.querySelector('#doctorDegree').checked
+  return filters
+}
+
+function doFiltering(d, filters) {
+  return (filters.selectedStates.length === 0 ?
+    true : filters.selectedStates.includes(d['State abbreviation']))
+    &&
+    d['Percent admitted - total'] >= filters.minPercentAdmin
+    &&    
+    d['Percent admitted - total'] <= filters.maxPercentAdmin
+    &&    
+    d['Total price for in-state students living on campus 2013-14']
+    <= filters.maxPriceInState
+    &&    
+    d['Total price for out-of-state students living on campus 2013-14']
+    <= filters.maxPriceOutState
+    &&
+    d['SAT Critical Reading 75th percentile score'] >= filters.minSatReading
+    &&
+    (filters.masterDegree ? d['Offers Master\'s degree'] === "Yes" : true)
+    &&
+    (filters.doctorDegree ? 
+      d['Offers Doctor\'s degree - research/scholarship'] === "Yes" ||
+      d['Offers Doctor\'s degree - professional practice'] === "Yes" ||
+      d['Offers Doctor\'s degree - other'] === "Yes"
+      : true)
+    &&
+    d['SAT Math 75th percentile score'] >= filters.minSatMath
+    &&
+    d['SAT Math 75th percentile score'] >= filters.minSatMath
+}
 
 /**
  * ============================================================================
@@ -232,9 +265,7 @@ function renderMapViz(schoolData, geoData, filters) {
     .data(schoolData)
     .enter()
     .append("use")
-     // filter for selected state
-    .filter(d => filters.selectedStates.length === 0 ?
-      true : filters.selectedStates.includes(d['State abbreviation']))
+    .filter(d => doFiltering(d, filters))
     .attr("href", "#school-icon-g")
     .attr("transform", "translate(-10,-10)")
     .attr("x", function(d) {
@@ -273,7 +304,7 @@ function renderMapViz(schoolData, geoData, filters) {
               .attr("class", "legend")
             .attr("width", 140)
             .attr("height", 200)
-            .attr("transform", "translate(200,60)")
+            .attr("transform", "translate(200,100)")
             .selectAll("g")
             .data(color.domain().slice().reverse())
             .enter()

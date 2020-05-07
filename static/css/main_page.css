@@ -55,12 +55,15 @@ div.tooltip {
 
 iframe {
     width: 100%;
-    height: 45em;
     border: 0;
 }
 
 #barViz {
     height: 130em;
+}
+
+#mapViz {
+    height: 55em;
 }
 
 /* ====================================================================== */

@@ -14,10 +14,79 @@
   <table id="mainTable">
     <tr>
       <td id="formColumn">
+        <h3 style="margin: 0">Filters</h3>
         <!-- form for user inputs -->
         <form action="javascript: submitForm()" onchange="submitForm()">
-          <label for="states">Select a State:</label><br>
-          <form action="">
+          <!-- <div class="filter">
+            <label for="filtersList">Select Filter Category:</label>
+            <div class="filter">
+              <select id="filtersList">
+                  <option value="States">State Selection</option>  
+                  <option value="Admission">Admission</option>
+                  <option value="Pricing">Pricing</option>
+                  <option value="SAT Scores">SAT Scores</option>
+                  <option value="Degrees Offered">Degrees Offered</option>
+              </select>
+            </div>  
+          </div> -->
+          <div class="filter">
+            <label for="minPercentAdmit">Min. percent admitted:
+              <span id="minPercentAdmitSpan">20</span>
+            </label>
+            <input type="range" id="minPercentAdmit" name="minPercentAdmit"
+            min="0" max="100" step="1" value="20"
+            onmousemove="displayNum('minPercentAdmit', 'minPercentAdmitSpan')">
+          </div>
+          <div class="filter">
+            <label for="maxPercentAdmit">Max. percent admitted:
+              <span id="maxPercentAdmitSpan">80</span>
+            </label>
+            <input type="range" id="maxPercentAdmit" name="maxPercentAdmit"
+            min="0" max="100" step="1" value="80"
+            onmousemove="displayNum('maxPercentAdmit', 'maxPercentAdmitSpan')">
+          </div>
+          <div class="filter">
+            <label for="maxPriceInState">Max. total price in-state:
+              <span id="maxPriceInStateSpan">80000</span>
+            </label>
+            <input type="range" id="maxPriceInState" name="maxPriceInState"
+            min="0" max="100000" step="1000" value="80000"
+            onmousemove="displayNum('maxPriceInState', 'maxPriceInStateSpan')">
+          </div>
+          <div class="filter">
+            <label for="maxPriceOutState">Max. total price out-of-state:
+              <span id="maxPriceOutStateSpan">80000</span>
+            </label>
+            <input type="range" id="maxPriceOutState" name="maxPriceOutState"
+            min="0" max="100000" step="1000" value="80000"
+            onmousemove="displayNum('maxPriceOutState', 'maxPriceOutStateSpan')">
+          </div>
+          <div class="filter">
+            <label for="minSatReading">Min. SAT Rdng. 75th percentile:
+              <span id="minSatReadingSpan">500</span>
+            </label>
+            <input type="range" id="minSatReading" name="minSatReading"
+            min="0" max="800" step="10" value="500"
+            onmousemove="displayNum('minSatReading', 'minSatReadingSpan')">
+          </div>
+          <div class="filter">
+            <label for="minSatMath">Min. SAT Math 75th percentile:
+              <span id="minSatMathSpan">500</span>
+            </label>
+            <input type="range" id="minSatMath" name="minSatMath"
+            min="0" max="800" step="10" value="500"
+            onmousemove="displayNum('minSatMath', 'minSatMathSpan')">
+          </div>
+          <div class="filter">
+            <input type="checkbox" id="masterDegree" name="masterDegree">
+            <label for="masterDegree">Must offer Master's Degree</label><br>
+          </div>
+          <div class="filter">
+            <input type="checkbox" id="doctorDegree" name="doctorDegree">
+            <label for="doctorDegree">Must offer Doctor's Degree</label><br>
+          </div>
+          <div class="filter">
+            <span for="states" display="inline">Select states:</span>
             <input id="stateInput" list="stateList" name="state">
             <datalist id="stateList">
                 <option value="Alabama">
@@ -72,37 +141,26 @@
                 <option value="Wisconsin">
                 <option value="Wyoming">
             </datalist>
-            <input type="submit" onclick="selectState()">
-          </form>         
-          <div>
-            <p>Selected States</p>
-            <ul id="selectedStates" name="selectedStates" class="dynamic-list">
-            </ul>
-            <input type="submit" value="Clear State List"
-             onclick="document.getElementById('selectedStates').innerHTML=''; 
-                      submitForm()">
-          </div> 
-          <label for="vol">GPA:</label><br>
-          <input type="range" id="likeThreshold" name="likeThreshold" min="0" max="5"
-          step="0.5" value="3.5" 
-          onmousemove="starSliderChange(Number(document.getElementById('likeThreshold').value))">
-          <br><br>
-          <label for="numSimilarUsers">Number of Best Matching Schools to Show:
-            <span id="numUsersDisplay">10</span>
-          </label><br>
-          <input type="range" id="numSimilarUsers" name="numSimilarUsers" min="0" max="100"
-          step="1" value="10" onmousemove="displayNumUsers(document.getElementById('numSimilarUsers').value)">
-          <br><br>
-          <div>
-            <p>Selected Schools</p>
+            <input type="submit" onclick="selectState()">       
+          </div>
+          <div class="filter selectionListDiv">
+              <span>Selected States</span>
+              <ul id="selectedStates" name="selectedStates" class="dynamic-list">
+              </ul>
+              <input class="clearButton" type="submit" value="Clear State List"
+              onclick="document.getElementById('selectedStates').innerHTML=''; 
+                        submitForm()">
+          </div>
+          <div class="filter selectionListDiv">
+            <span>Selected Schools</span>
             <ul id="selectedSchools" name="selectedSchools"
                class="dynamic-list"
                style="background-color: rgb(139, 116, 189);">
             </ul>
-            <input type="submit" value="Clear School List"
+            <input class="clearButton" type="submit" value="Clear School List"
              onclick="document.getElementById('selectedSchools').innerHTML=''; 
                       submitForm()">
-          </div> 
+          </div>  
           <p style="text-align: center;">
           <input type="submit" value="Compare Schools!" 
             style="font-weight: bold; font-size: 14pt;" 
