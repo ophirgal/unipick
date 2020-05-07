@@ -96,7 +96,7 @@ body {
     text-align: center;
 }
 .p {
-    max-width: 600px;
+    max-width: 800px;
 }
 .u_title::before {
     content:"";

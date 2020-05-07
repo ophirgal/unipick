@@ -304,7 +304,7 @@ function renderMapViz(schoolData, geoData, filters) {
               .attr("class", "legend")
             .attr("width", 140)
             .attr("height", 200)
-            .attr("transform", "translate(200,100)")
+            .attr("transform", "translate(200,150)")
             .selectAll("g")
             .data(color.domain().slice().reverse())
             .enter()
