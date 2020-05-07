@@ -32,6 +32,7 @@ div.tooltip {
 }
 .remove-button:hover {
     background: darkgray;
+    outline: none;
 }
 
 .dynamic-list { 
@@ -54,7 +55,7 @@ div.tooltip {
 
 body {
     margin: 0 auto;
-    width: 90%;
+    width: 100%;
 }
 #viz {
     width: 100%;

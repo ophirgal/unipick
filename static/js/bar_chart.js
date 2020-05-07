@@ -8,7 +8,15 @@ var dataloaded = 0;
 // this code manages the click event on the page
 // you should not have to modify this code
 
-getData();
+//The array that Ophir gives it. Just an array with the state names
+var input_Array = [];
+
+// Respond to message from parent page
+window.onmessage = function(event) { 
+  // get selected schools list from parent
+  input_Array = event.data;
+  getData();  // Start visualization
+}
 
 function getData() {
   // TODO: replace with proper code to fetch data from the server
@@ -16,13 +24,11 @@ function getData() {
 
 if(dataloaded == 0){
   var attribute_types = [];
-  console.log("ji");
   //clear the canvas
   d3.selectAll("svg > *").remove();
 
   d3.json("http://localhost:8080/").then(function(data){
-
-    renderVisualization(data);
+    renderVisualization(data.ipeds_data);
   });
 
   //Original code for the table
@@ -45,14 +51,6 @@ function renderVisualization(jsonTuples) {
   if(dataloaded == 0){
   // console.log("vis tups");
   // console.log(jsonTuples);
-
-  //The array that Ophir gives it. Just an array with the state names
-  var input_Array = [];
-      input_Array.push("Alabama A & M University");
-      input_Array.push("University of North Carolina at Greensboro");
-      input_Array.push("Amridge University");
-      input_Array.push("Alabama State University");
-      input_Array.push("Athens State University");
 
   //A news tuples set of just the data related to the selected states
   var parsed_elemets_tuples = [];

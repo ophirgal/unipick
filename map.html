@@ -11,26 +11,11 @@
 </head>
 
 <body>
-  <h1><em>Intro to Data Visualization: Final Project</em></h1>
-  <h1><em>Unipick: A Utility for Choosing an Institution of Higher Education</em></h1>
-  <i><h3>Created by: Ophir Gal & I'Shea Boyd</h3></i>
-  <h2 class="u_title">Visualization</h2>
   <table id="mainTable">
     <tr>
       <td id="formColumn">
         <!-- form for user inputs -->
         <form action="javascript: submitForm()" onchange="submitForm()">
-          <label for="vol">GPA:</label><br>
-          <input type="range" id="likeThreshold" name="likeThreshold" min="0" max="5"
-          step="0.5" value="3.5" 
-          onmousemove="starSliderChange(Number(document.getElementById('likeThreshold').value))">
-          <br><br>
-          <label for="numSimilarUsers">Number of Best Matching Schools to Show:
-            <span id="numUsersDisplay">10</span>
-          </label><br>
-          <input type="range" id="numSimilarUsers" name="numSimilarUsers" min="0" max="100"
-          step="1" value="10" onmousemove="displayNumUsers(document.getElementById('numSimilarUsers').value)">
-          <br><br>
           <label for="states">Select a State:</label><br>
           <form action="">
             <input id="stateInput" list="stateList" name="state">
@@ -97,6 +82,17 @@
              onclick="document.getElementById('selectedStates').innerHTML=''; 
                       submitForm()">
           </div> 
+          <label for="vol">GPA:</label><br>
+          <input type="range" id="likeThreshold" name="likeThreshold" min="0" max="5"
+          step="0.5" value="3.5" 
+          onmousemove="starSliderChange(Number(document.getElementById('likeThreshold').value))">
+          <br><br>
+          <label for="numSimilarUsers">Number of Best Matching Schools to Show:
+            <span id="numUsersDisplay">10</span>
+          </label><br>
+          <input type="range" id="numSimilarUsers" name="numSimilarUsers" min="0" max="100"
+          step="1" value="10" onmousemove="displayNumUsers(document.getElementById('numSimilarUsers').value)">
+          <br><br>
           <div>
             <p>Selected Schools</p>
             <ul id="selectedSchools" name="selectedSchools"
@@ -107,9 +103,10 @@
              onclick="document.getElementById('selectedSchools').innerHTML=''; 
                       submitForm()">
           </div> 
-          <p style="text-align: center;"><br>
+          <p style="text-align: center;">
           <input type="submit" value="Compare Schools!" 
-            style="font-weight: bold; font-size: 14pt;" onclick="">
+            style="font-weight: bold; font-size: 14pt;" 
+            onclick="compareSchools()">
           </p>
         </form>
       </td>
@@ -119,52 +116,12 @@
       </td>
     </tr>
   </table>
-  
-  <div class="p">
-    <p>
-      <h2 class="u_title">Quick How-To Guide</h2>
-      ??
-         
-    </p>
-    <p>
-      <h2 class="u_title">The Rationale for My Design</h2>
-      <h3>How I Chose My Particular Visual Encodings and Interaction
-      Techniques</h3>
-      ??
-    </p>
-    <h3>The Alternatives I Considered and How I Arrived at My Ultimate Choice
-    </h3>
-    ??
-    <h2 class="u_title">Dataset</h2>
-    ??<br>
-
-
-    Permalink:
-    <a href="https://grouplens.org/datasets/movielens/latest/">
-      https://???</a>
-  </div>
-  
-  <h2 class="u_title">An Overview of My Development Process</h2>
-  <table id="btmTable">
-    <tr>
-      <th>Component</th><th>Estimated Time Spent (hours)</th>
-    </tr>
-    <tr>
-      <td>Came up with design idea</td><td>??</td>  
-    </tr>
-    <tr>
-      <td>??</td><td>??</td>
-    </tr>
-    <tr>
-      <th>Total </th><th> ??</th>
-    </tr>
-  </table>
   <svg id="school-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" width="0px" height="0px">
-  <g id="school-icon-g" transform="scale(0.02)">
-    <path d="M969.6,313L535.2,163.6c-27.1-9.8-21.4-9.9-48.2-0.1L50,311.6c-26.9,9.7-26.7,25.6,0.4,35.4l103.8,35.2c-46,44.5-49,90.9-49.6,144.6c-17.8,6.8-30.4,24.1-30.4,44.3c0,18.5,10.6,34.6,26.1,42.4C93,668,71.9,730.4,10,804.2c30.6,23.7,46.4,31.6,70.1,39.5c86.6-37.2,76-136,69.3-234.3c11.9-8.6,19.6-22.6,19.6-38.4c0-17-8.9-31.8-22.2-40.2c1.5-52.6,13-99.7,52.4-130.2c0.3-0.8,1.2-1.5,2.9-2.2l298.6-120.7c11.1-4.4,23.7,0.9,28.1,12l0.4,1c4.4,11.1-0.9,23.6-12,28.1L264.8,419.7l225.8,76.6c27.1,9.8,21.4,9.9,48.3,0.2L970,348.3C996.8,338.6,996.7,322.8,969.6,313z M490,553.6L216.6,461v69.7c14.3,13.1,22.2,31.9,22.2,52.8c0,18.8-6.6,35.8-17.6,48.6c3.6,10.9,9.9,21.6,18.9,25c159.1,87.9,379,87,555.8-8.9c13.1-10.9,23.3-24.5,23.3-37.5V457.1l-280.8,96.7C511.6,563.5,517,563.5,490,553.6z"/>
-  </g>
-</svg>
-
+    <g id="school-icon-g" transform="scale(0.02)">
+      <path d="M969.6,313L535.2,163.6c-27.1-9.8-21.4-9.9-48.2-0.1L50,311.6c-26.9,9.7-26.7,25.6,0.4,35.4l103.8,35.2c-46,44.5-49,90.9-49.6,144.6c-17.8,6.8-30.4,24.1-30.4,44.3c0,18.5,10.6,34.6,26.1,42.4C93,668,71.9,730.4,10,804.2c30.6,23.7,46.4,31.6,70.1,39.5c86.6-37.2,76-136,69.3-234.3c11.9-8.6,19.6-22.6,19.6-38.4c0-17-8.9-31.8-22.2-40.2c1.5-52.6,13-99.7,52.4-130.2c0.3-0.8,1.2-1.5,2.9-2.2l298.6-120.7c11.1-4.4,23.7,0.9,28.1,12l0.4,1c4.4,11.1-0.9,23.6-12,28.1L264.8,419.7l225.8,76.6c27.1,9.8,21.4,9.9,48.3,0.2L970,348.3C996.8,338.6,996.7,322.8,969.6,313z M490,553.6L216.6,461v69.7c14.3,13.1,22.2,31.9,22.2,52.8c0,18.8-6.6,35.8-17.6,48.6c3.6,10.9,9.9,21.6,18.9,25c159.1,87.9,379,87,555.8-8.9c13.1-10.9,23.3-24.5,23.3-37.5V457.1l-280.8,96.7C511.6,563.5,517,563.5,490,553.6z"/>
+    </g>
+  </svg>
+  
 <!-- perhaps move the reference below to top of file if doesn't matter -->
 <script type="text/javascript" src="static/js/map.js"></script>
 

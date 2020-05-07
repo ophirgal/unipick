@@ -46,6 +46,11 @@ function submitForm(centerPerson=0){
   })
 }
 
+function compareSchools(){
+  // Send list of selected schools to parent page
+  window.top.postMessage(getSelectedSchools(), '*')
+}
+
 function _trimButton(listItemString){
   let indexOfCaret = listItemString.indexOf('<')
   return listItemString.slice(0, indexOfCaret)
@@ -57,6 +62,14 @@ function getSelectedStates(){
     selectedStates.push(_trimButton(listItem.innerHTML))
   }
   return selectedStates
+}
+
+function getSelectedSchools(){
+  let selectedSchools = []
+  for (let listItem of document.getElementsByClassName('selected-school')){
+    selectedSchools.push(_trimButton(listItem.innerHTML))
+  }
+  return selectedSchools
 }
 
 function starSliderChange(value){
@@ -167,7 +180,7 @@ function renderMapViz(schoolData, geoData, filters) {
 
   // D3 Projection
   var projection = d3.geoAlbersUsa()
-            .translate([width/2, height/2])    // translate to center of screen
+            .translate([width*(0.54), height/2])    // translate to center of screen
             .scale([1000]);          // scale things down so see entire US
           
   // Define path generator
@@ -260,7 +273,7 @@ function renderMapViz(schoolData, geoData, filters) {
               .attr("class", "legend")
             .attr("width", 140)
             .attr("height", 200)
-            .attr("transform", "translate(270,300)")
+            .attr("transform", "translate(200,60)")
             .selectAll("g")
             .data(color.domain().slice().reverse())
             .enter()
