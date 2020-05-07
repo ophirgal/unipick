@@ -109,12 +109,12 @@ function selectState(){
   let selectedStates = document.getElementById('selectedStates')
   if (stateList.includes(valueEntered)
       && (!selectedStates.innerHTML.includes(valueEntered))) {
-    selectedStates.innerHTML += 
+    selectedStates.innerHTML = 
       `<li class="selected-state" id="selected-${valueEntered}">` + 
       valueEntered +
       `<span>&nbsp;&nbsp;</span><button type="button" class="remove-button"
       onclick="deselectListItem('${valueEntered}')">` +
-      '&#215;</button>' + '</li>' 
+      '&#215;</button>' + '</li>' + selectedStates.innerHTML
   }
 }
 
@@ -122,12 +122,12 @@ function selectState(){
 function selectSchool(school){
   let selectedSchools = document.getElementById('selectedSchools')
   if (!selectedSchools.innerHTML.includes(school.Name)) {
-    selectedSchools.innerHTML += 
+    selectedSchools.innerHTML = 
       `<li class="selected-school" id="selected-${school.Name}">` + 
       school.Name +
       `<span>&nbsp;&nbsp;</span><button type="button" class="remove-button"
       onclick="deselectListItem('${school.Name}')">` +
-      '&#215;</button>' + '</li>' 
+      '&#215;</button>' + '</li>' + selectedSchools.innerHTML
   }
 }
 
