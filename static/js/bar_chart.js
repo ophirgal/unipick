@@ -7,7 +7,7 @@ var dataloaded = 0;
 
 // Respond to Ophir's visualization
 // Respond to message from parent page
-window.onmessage = function(event) { 
+window.onmessage = function(event) {
   // get selected schools list from parent
   let input_Array = event.data;
   getData(input_Array);  // Start visualization
@@ -42,8 +42,8 @@ function getData(input_Array) {
 function renderVisualization(jsonTuples, input_Array) {
   var margin = {top: 50, right: 50, bottom: 50, left: 100};
   var width = window.innerWidth - margin.left - margin.right;
-  var height = 750 - margin.top - margin.bottom;
-  
+  var height = 750 - margin.top - margin.bottom + 15;
+
   // console.log("vis tups");
   // console.log(jsonTuples);
 
@@ -92,6 +92,8 @@ function enrollment_bar_chart(parsed_elemets_tuples, width, height){
       return (
             (d != "ID number")
             & (d != "Name")
+            & (d != "Percent of freshmen receiving other federal grant aid")
+            & (d != "Percent of freshmen receiving federal grant aid")
             & (d != "year")
             & (d != "ZIP code")
             & (d != "Highest degree offered")
@@ -222,6 +224,10 @@ function enrollment_bar_chart(parsed_elemets_tuples, width, height){
             & (d != "Percent of freshmen receiving federal grant aid")
             & (d != "Percent of freshmen receiving Pell grants")
             & (d != "Percent of freshmen receiving any financial aid")
+            & (d != "Percent of first-time undergraduates - foreign countries")
+            & (d != "Percent of first-time undergraduates - in-state")
+            & (d != "Percent of first-time undergraduates - out-of-state")
+            & (d != "Percent of first-time undergraduates - residence unknown")
             & (d != "Percent of freshmen receiving federal student loans")
             & (d != "Percent of freshmen receiving federal, state, local or institutional grant aid")
             & (d != "Percent of freshmen receiving institutional grant aid")
@@ -296,11 +302,11 @@ function enrollment_bar_chart(parsed_elemets_tuples, width, height){
           .attr("height", d => 600 - hScale(d[selection]))
           .attr("x", d => xBand(d.Name) + "px")
           .attr("y", d => 50 + hScale(d[selection]) + "px")
-          .attr("fill", "green")
+          .attr("fill", "purple")
           .on("mouseover", function(d){
             if(!states_selected.includes(d.Name)){
               d3.select(this)
-                .attr('fill', 'blue');
+                .attr('fill', 'grey');
               tooltip.text(d.Name + ", " + selection + " = " + d[selection] );
               return tooltip.style("visibility", "visible");
             }
@@ -313,7 +319,7 @@ function enrollment_bar_chart(parsed_elemets_tuples, width, height){
           .on("mouseout", function(d){
             if(!states_selected.includes(d.Name)){
               d3.select(this)
-                .attr('fill', 'green');
+                .attr('fill', 'purple');
               tooltip.text(d.Name + ", " + selection + " = " + d[selection] );
               return tooltip.style("visibility", "hidden");
             }
@@ -330,7 +336,7 @@ function enrollment_bar_chart(parsed_elemets_tuples, width, height){
           //       return tooltip.style("visibility", "visible");
           //   }else{
           //     d3.select(this)
-          //       .attr('fill', 'green');
+          //       .attr('fill', 'purple');
           //       //remove the state from the Summary chart
           //       array = array.filter(e => e !== d.Name);
           //       states_selected = states_selected.filter(e => e !== d.Name);
@@ -344,11 +350,11 @@ function enrollment_bar_chart(parsed_elemets_tuples, width, height){
           .attr("transform", "translate(0,650)")
           .call(d3.axisBottom(xBand))
           .selectAll("text")
-          .style("text-anchor", "middle")
+          .style("text-anchor", "start")
           .style("font", "14px times")
           .attr("dx", "-.8em")
           .attr("dy", "1em")
-          .attr("transform", "rotate(0)");
+          .attr("transform", "rotate(15)");
       d3.select("#chartOne").append("g")
           .attr("transform", "translate(100,50)")
           .call(d3.axisLeft(hScale));
@@ -365,17 +371,20 @@ function enrollment_bar_chart(parsed_elemets_tuples, width, height){
         update_bar_chart(parsed_elemets_tuples, selection.value, width, height);
 
          });
+
+         selector.selectAll("option")
+           .data(data_attributes)
+           .enter().append("option")
+           .attr("value", function(d){
+             return d;
+           })
+           .text(function(d){
+             return d;
+           })
+
   }
 
-    selector.selectAll("option")
-      .data(data_attributes)
-      .enter().append("option")
-      .attr("value", function(d){
-        return d;
-      })
-      .text(function(d){
-        return d;
-      })
+
 
       var button1_ascending = document.getElementById("but1_Chart1")
         .addEventListener("click", function(event) {
@@ -404,6 +413,7 @@ function college_expense_bar_chart(parsed_elemets_tuples, width, height){
   //track the selected states
   var states_selected = [];
 
+  console.log(parsed_elemets_tuples[0]);
   //obtain all the attributes of the data (Population, age, etc.)
   var data_attributes = Object.keys(parsed_elemets_tuples[0])
     .filter(function(d){
@@ -411,6 +421,8 @@ function college_expense_bar_chart(parsed_elemets_tuples, width, height){
       return (
             (d != "ID number")
             & (d != "Name")
+                        & (d != "Percent of freshmen receiving other federal grant aid")
+            & (d != "Percent of freshmen receiving federal grant aid")
             & (d != "year")
             & (d != "ZIP code")
             & (d != "Highest degree offered")
@@ -433,6 +445,10 @@ function college_expense_bar_chart(parsed_elemets_tuples, width, height){
             & (d != "Applicants total")
             & (d != "Admissions total")
             & (d != "Enrolled total")
+            & (d != "Percent of first-time undergraduates - foreign countries")
+            & (d != "Percent of first-time undergraduates - in-state")
+            & (d != "Percent of first-time undergraduates - out-of-state")
+            & (d != "Percent of first-time undergraduates - residence unknown")
             & (d != "Percent of freshmen submitting SAT scores")
             & (d != "Percent of freshmen submitting ACT scores")
             & (d != "SAT Critical Reading 25th percentile score")
@@ -615,11 +631,11 @@ function college_expense_bar_chart(parsed_elemets_tuples, width, height){
           .attr("height", d => 600 - hScale(d[selection]))
           .attr("x", d => xBand(d.Name) + "px")
           .attr("y", d => 50 + hScale(d[selection]) + "px")
-          .attr("fill", "green")
+          .attr("fill", "purple")
           .on("mouseover", function(d){
             if(!states_selected.includes(d.Name)){
               d3.select(this)
-                .attr('fill', 'blue');
+                .attr('fill', 'grey');
               tooltip.text(d.Name + ", " + selection + " = " + d[selection] );
               return tooltip.style("visibility", "visible");
             }
@@ -632,7 +648,7 @@ function college_expense_bar_chart(parsed_elemets_tuples, width, height){
           .on("mouseout", function(d){
             if(!states_selected.includes(d.Name)){
               d3.select(this)
-                .attr('fill', 'green');
+                .attr('fill', 'purple');
               tooltip.text(d.Name + ", " + selection + " = " + d[selection] );
               return tooltip.style("visibility", "hidden");
             }
@@ -649,7 +665,7 @@ function college_expense_bar_chart(parsed_elemets_tuples, width, height){
           //       return tooltip.style("visibility", "visible");
           //   }else{
           //     d3.select(this)
-          //       .attr('fill', 'green');
+          //       .attr('fill', 'purple');
           //       //remove the state from the Summary chart
           //       array = array.filter(e => e !== d.Name);
           //       states_selected = states_selected.filter(e => e !== d.Name);
@@ -663,16 +679,16 @@ function college_expense_bar_chart(parsed_elemets_tuples, width, height){
           .attr("transform", "translate(0,650)")
           .call(d3.axisBottom(xBand))
           .selectAll("text")
-          .style("text-anchor", "middle")
+          .style("text-anchor", "start")
           .style("font", "14px times")
           .attr("dx", "-.8em")
           .attr("dy", "1em")
-          .attr("transform", "rotate(0)");
+          .attr("transform", "rotate(15)");
       d3.select("#chartTwo").append("g")
           .attr("transform", "translate(100,50)")
           .call(d3.axisLeft(hScale));
 
-
+  if (document.querySelector("#drop2").innerHTML === "") {
 	var selector = d3.select("#drop2")
     	.append("select")
     	.attr("id","dropdown2")
@@ -692,6 +708,7 @@ function college_expense_bar_chart(parsed_elemets_tuples, width, height){
       .text(function(d){
         return d;
       })
+    }
 
       var button1_ascending = document.getElementById("but")
         .addEventListener("click", function(event) {
@@ -790,6 +807,8 @@ switch (order) {
             (d != "ID number")
             & (d != "Name")
             & (d != "year")
+                        & (d != "Percent of freshmen receiving other federal grant aid")
+            & (d != "Percent of freshmen receiving federal grant aid")
             & (d != "ZIP code")
             & (d != "Highest degree offered")
             & (d != "County name")
@@ -968,11 +987,11 @@ switch (order) {
           .attr("height", d => 600 - hScale(d[selection]))
           .attr("x", d => xBand(d.Name) + "px")
           .attr("y", d => 50 + hScale(d[selection]) + "px")
-          .attr('fill', 'green')
+          .attr('fill', 'purple')
           .on("mouseover", function(d){
             if(!states_selected.includes(d.Name)){
               d3.select(this)
-                .attr('fill', 'blue');
+                .attr('fill', 'grey');
               tooltip.text(d.Name + " " + selection + " = " + d[selection] );
               return tooltip.style("visibility", "visible");
             }
@@ -985,7 +1004,7 @@ switch (order) {
           .on("mouseout", function(d){
             if(!states_selected.includes(d.Name)){
               d3.select(this)
-                .attr('fill', 'green');
+                .attr('fill', 'purple');
               tooltip.text(d.Name + " " + selection + " = " + d[selection] );
               return tooltip.style("visibility", "hidden");
             }
@@ -1002,7 +1021,7 @@ switch (order) {
           //       return tooltip.style("visibility", "visible");
           //   }else{
           //     d3.select(this)
-          //       .attr('fill', 'green');
+          //       .attr('fill', 'purple');
           //       //remove the state from the Summary chart
           //       array = array.filter(e => e !== d.Name);
           //       states_selected = states_selected.filter(e => e !== d.Name);
@@ -1015,11 +1034,11 @@ switch (order) {
           .attr("transform", "translate(0,650)")
           .call(d3.axisBottom(xBand))
           .selectAll("text")
-          .style("text-anchor", "middle")
+          .style("text-anchor", "start")
           .style("font", "14px times")
           .attr("dx", "-.8em")
           .attr("dy", "1em")
-          .attr("transform", "rotate(0)");
+          .attr("transform", "rotate(15)");
       d3.select("#chartOne").append("g")
           .attr("transform", "translate(100,50)")
           .call(d3.axisLeft(hScale));
@@ -1292,11 +1311,11 @@ switch (order) {
           .attr("height", d => 600 - hScale(d[selection]))
           .attr("x", d => xBand(d.Name) + "px")
           .attr("y", d => 50 + hScale(d[selection]) + "px")
-          .attr('fill', 'green')
+          .attr('fill', 'purple')
           .on("mouseover", function(d){
             if(!states_selected.includes(d.Name)){
               d3.select(this)
-                .attr('fill', 'blue');
+                .attr('fill', 'grey');
               tooltip.text(d.Name + " " + selection + " = " + d[selection] );
               return tooltip.style("visibility", "visible");
             }
@@ -1309,7 +1328,7 @@ switch (order) {
           .on("mouseout", function(d){
             if(!states_selected.includes(d.Name)){
               d3.select(this)
-                .attr('fill', 'green');
+                .attr('fill', 'purple');
               tooltip.text(d.Name + " " + selection + " = " + d[selection] );
               return tooltip.style("visibility", "hidden");
             }
@@ -1326,7 +1345,7 @@ switch (order) {
           //       return tooltip.style("visibility", "visible");
           //   }else{
           //     d3.select(this)
-          //       .attr('fill', 'green');
+          //       .attr('fill', 'purple');
           //       //remove the state from the Summary chart
           //       array = array.filter(e => e !== d.Name);
           //       states_selected = states_selected.filter(e => e !== d.Name);
@@ -1339,11 +1358,11 @@ switch (order) {
           .attr("transform", "translate(0,650)")
           .call(d3.axisBottom(xBand))
           .selectAll("text")
-          .style("text-anchor", "middle")
+          .style("text-anchor", "start")
           .style("font", "14px times")
           .attr("dx", "-.8em")
           .attr("dy", "1em")
-          .attr("transform", "rotate(0)");
+          .attr("transform", "rotate(15)");
       d3.select("#chartTwo").append("g")
           .attr("transform", "translate(100,50)")
           .call(d3.axisLeft(hScale));
@@ -1396,7 +1415,13 @@ function update_bar_chart(parsed_elemets_tuples, selection, width, height){
       return (
             (d != "ID number")
             & (d != "Name")
+            & (d != "Percent of freshmen receiving federal grant aid")
+            & (d != "Percent of freshmen receiving other federal grant aid")
             & (d != "year")
+            & (d != "Percent of first-time undergraduates - foreign countries")
+            & (d != "Percent of first-time undergraduates - in-state")
+            & (d != "Percent of first-time undergraduates - out-of-state")
+            & (d != "Percent of first-time undergraduates - residence unknown")
             & (d != "ZIP code")
             & (d != "Highest degree offered")
             & (d != "County name")
@@ -1576,11 +1601,11 @@ function update_bar_chart(parsed_elemets_tuples, selection, width, height){
           .attr("height", d => 600 - hScale(d[selection]))
           .attr("x", d => xBand(d.Name) + "px")
           .attr("y", d => 50 + hScale(d[selection]) + "px")
-          .attr('fill', 'green')
+          .attr('fill', 'purple')
           .on("mouseover", function(d){
             if(!states_selected.includes(d.Name)){
               d3.select(this)
-                .attr('fill', 'blue');
+                .attr('fill', 'grey');
               tooltip.text(d.Name + " " + selection + " = " + d[selection] );
               return tooltip.style("visibility", "visible");
             }
@@ -1593,7 +1618,7 @@ function update_bar_chart(parsed_elemets_tuples, selection, width, height){
           .on("mouseout", function(d){
             if(!states_selected.includes(d.Name)){
               d3.select(this)
-                .attr('fill', 'green');
+                .attr('fill', 'purple');
               tooltip.text(d.Name + " " + selection + " = " + d[selection] );
               return tooltip.style("visibility", "hidden");
             }
@@ -1610,7 +1635,7 @@ function update_bar_chart(parsed_elemets_tuples, selection, width, height){
           //       return tooltip.style("visibility", "visible");
           //   }else{
           //     d3.select(this)
-          //       .attr('fill', 'green');
+          //       .attr('fill', 'purple');
           //       //remove the state from the Summary chart
           //       array = array.filter(e => e !== d.Name);
           //       states_selected = states_selected.filter(e => e !== d.Name);
@@ -1623,11 +1648,11 @@ function update_bar_chart(parsed_elemets_tuples, selection, width, height){
           .attr("transform", "translate(0,650)")
           .call(d3.axisBottom(xBand))
           .selectAll("text")
-          .style("text-anchor", "middle")
+          .style("text-anchor", "start")
           .style("font", "14px times")
           .attr("dx", "-.8em")
           .attr("dy", "1em")
-          .attr("transform", "rotate(0)");
+          .attr("transform", "rotate(15)");
       d3.select("#chartOne").append("g")
           .attr("transform", "translate(100,50)")
           .call(d3.axisLeft(hScale));
@@ -1694,8 +1719,14 @@ function update_bar_chart_expense(parsed_elemets_tuples, selection, width, heigh
       return (
             (d != "ID number")
             & (d != "Name")
+            & (d != "Percent of freshmen receiving other federal grant aid")
+            & (d != "Percent of freshmen receiving federal grant aid")
             & (d != "year")
             & (d != "ZIP code")
+            & (d != "Percent of first-time undergraduates - foreign countries")
+            & (d != "Percent of first-time undergraduates - in-state")
+            & (d != "Percent of first-time undergraduates - out-of-state")
+            & (d != "Percent of first-time undergraduates - residence unknown")
             & (d != "Highest degree offered")
             & (d != "County name")
             & (d != "Longitude location of institution")
@@ -1874,11 +1905,11 @@ function update_bar_chart_expense(parsed_elemets_tuples, selection, width, heigh
           .attr("height", d => 600 - hScale(d[selection]))
           .attr("x", d => xBand(d.Name) + "px")
           .attr("y", d => 50 + hScale(d[selection]) + "px")
-          .attr('fill', 'green')
+          .attr('fill', 'purple')
           .on("mouseover", function(d){
             if(!states_selected.includes(d.Name)){
               d3.select(this)
-                .attr('fill', 'blue');
+                .attr('fill', 'grey');
               tooltip.text(d.Name + " " + selection + " = " + d[selection] );
               return tooltip.style("visibility", "visible");
             }
@@ -1891,7 +1922,7 @@ function update_bar_chart_expense(parsed_elemets_tuples, selection, width, heigh
           .on("mouseout", function(d){
             if(!states_selected.includes(d.Name)){
               d3.select(this)
-                .attr('fill', 'green');
+                .attr('fill', 'purple');
               tooltip.text(d.Name + " " + selection + " = " + d[selection] );
               return tooltip.style("visibility", "hidden");
             }
@@ -1908,7 +1939,7 @@ function update_bar_chart_expense(parsed_elemets_tuples, selection, width, heigh
           //       return tooltip.style("visibility", "visible");
           //   }else{
           //     d3.select(this)
-          //       .attr('fill', 'green');
+          //       .attr('fill', 'purple');
           //       //remove the state from the Summary chart
           //       array = array.filter(e => e !== d.Name);
           //       states_selected = states_selected.filter(e => e !== d.Name);
@@ -1921,11 +1952,11 @@ function update_bar_chart_expense(parsed_elemets_tuples, selection, width, heigh
           .attr("transform", "translate(0,650)")
           .call(d3.axisBottom(xBand))
           .selectAll("text")
-          .style("text-anchor", "middle")
+          .style("text-anchor", "start")
           .style("font", "14px times")
           .attr("dx", "-.8em")
           .attr("dy", "1em")
-          .attr("transform", "rotate(0)");
+          .attr("transform", "rotate(15)");
       d3.select("#chartTwo").append("g")
           .attr("transform", "translate(100,50)")
           .call(d3.axisLeft(hScale));

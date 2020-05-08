@@ -1,5 +1,5 @@
 body {
-  
+
 }
 
 table, th, td {
@@ -15,7 +15,7 @@ table, th, td {
   visibility:hidden;
 }
 
-#but {
+#but, #but1_Chart1 {
   background-color: white; /* Green */
   transition: .5s ease;
    left: 100px;
@@ -31,12 +31,12 @@ table, th, td {
 
 }
 
-#but:hover {
+#but:hover, #but1_Chart1:hover {
   background-color:  #555555; /* Green */
   color: white;
 }
 
-#but2 {
+#but2, #but2_Chart1 {
   background-color: white; /* Green */
   transition: .5s ease;
    left: 249px;
@@ -52,12 +52,12 @@ table, th, td {
 
 }
 
-#but2:hover {
+#but2:hover, #but2_Chart1:hover {
   background-color:  #555555; /* Green */
   color: white;
 }
 
-#but3 {
+#but3, #but3_Chart1 {
   background-color: white; /* Green */
   transition: .5s ease;
   left: 400px;
@@ -73,7 +73,7 @@ table, th, td {
 
 }
 
-#but3:hover {
+#but3:hover,  #but3_Chart1:hover {
   background-color:  #555555; /* Green */
   color: white;
 }
