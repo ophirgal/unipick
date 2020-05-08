@@ -301,13 +301,13 @@ function renderMapViz(schoolData, geoData, filters) {
               .attr("class", "legend")
             .attr("width", 140)
             .attr("height", 200)
-            .attr("transform", "translate(200,150)")
+            .attr("transform", `translate(${width - 580}, ${height - 600})`)
             .selectAll("g")
             .data(color.domain().slice().reverse())
             .enter()
             .append("g")
             .attr("transform", (d, i) => "translate(0," + i * 20 + ")");
-    console.log('')
+  
   legend.append("rect")
       .attr("width", 15)
       .attr("height", 15)
