@@ -25,9 +25,6 @@ function submitForm(centerPerson=0){
     response.json()
     .then(jsonData => {
       let filters = getFilters();
-      console.log(filters.minPercentAdmin)
-      console.log(typeof(filters.minPercentAdmin))
-
       renderMapViz(schoolData=jsonData.ipeds_data, geoData=jsonData.geo_data,
                    filters=filters)
     })
@@ -310,7 +307,7 @@ function renderMapViz(schoolData, geoData, filters) {
             .enter()
             .append("g")
             .attr("transform", (d, i) => "translate(0," + i * 20 + ")");
-
+    console.log('')
   legend.append("rect")
       .attr("width", 15)
       .attr("height", 15)

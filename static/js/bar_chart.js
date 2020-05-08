@@ -1,34 +1,28 @@
-var margin = {top: 50, right: 50, bottom: 50, left: 100},
-  width = 1500 - margin.left - margin.right,
-  height = 750 - margin.top - margin.bottom;
-
+var margin = {top: 50, right: 50, bottom: 50, left: 100};
 var ordered;
 
 var dataloaded = 0;
 // this code manages the click event on the page
 // you should not have to modify this code
 
-//The array that Ophir gives it. Just an array with the state names
-var input_Array = [];
-
+// Respond to Ophir's visualization
 // Respond to message from parent page
 window.onmessage = function(event) { 
   // get selected schools list from parent
-  input_Array = event.data;
-  getData();  // Start visualization
+  let input_Array = event.data;
+  getData(input_Array);  // Start visualization
 }
 
-function getData() {
+function getData(input_Array) {
   // TODO: replace with proper code to fetch data from the server
   // and transform into JSON format
 
-if(dataloaded == 0){
   var attribute_types = [];
   //clear the canvas
   d3.selectAll("svg > *").remove();
 
   d3.json("http://localhost:8080/").then(function(data){
-    renderVisualization(data.ipeds_data);
+    renderVisualization(data.ipeds_data, input_Array);
   });
 
   //Original code for the table
@@ -43,12 +37,13 @@ if(dataloaded == 0){
     }
     resolve(data);
   });
-  dataloaded = 1;
- }
 }
 
-function renderVisualization(jsonTuples) {
-  if(dataloaded == 0){
+function renderVisualization(jsonTuples, input_Array) {
+  var margin = {top: 50, right: 50, bottom: 50, left: 100};
+  var width = window.innerWidth - margin.left - margin.right;
+  var height = 750 - margin.top - margin.bottom;
+  
   // console.log("vis tups");
   // console.log(jsonTuples);
 
@@ -69,12 +64,11 @@ function renderVisualization(jsonTuples) {
   // console.log("parsed_elemets_tuples");
   //
   // console.log(parsed_elemets_tuples);
-  enrollment_bar_chart(parsed_elemets_tuples);
+  enrollment_bar_chart(parsed_elemets_tuples, width, height);
   dataloaded = 1;
 
-  college_expense_bar_chart(parsed_elemets_tuples);
+  college_expense_bar_chart(parsed_elemets_tuples, width, height);
 
-}
 }
 
 // returns true if the data value is numeric
@@ -83,7 +77,7 @@ function isNumeric(n) {
 }
 
 //chart 1
-function enrollment_bar_chart(parsed_elemets_tuples){
+function enrollment_bar_chart(parsed_elemets_tuples, width, height){
 
   var i = 0;
   //track the states that should be added to the table
@@ -360,15 +354,18 @@ function enrollment_bar_chart(parsed_elemets_tuples){
           .call(d3.axisLeft(hScale));
 
 
-	var selector = d3.select("#drop")
-    	.append("select")
+  var selector;
+  if (document.querySelector("#drop").innerHTML === "") {
+    selector = d3.select("#drop")
+      .append("select")
     	.attr("id","dropdown")
     	.on("change", function(d){
         selection = document.getElementById("dropdown");
 
-        update_bar_chart(parsed_elemets_tuples, selection.value);
+        update_bar_chart(parsed_elemets_tuples, selection.value, width, height);
 
          });
+  }
 
     selector.selectAll("option")
       .data(data_attributes)
@@ -399,7 +396,7 @@ function enrollment_bar_chart(parsed_elemets_tuples){
 }
 
 //chart 2
-function college_expense_bar_chart(parsed_elemets_tuples){
+function college_expense_bar_chart(parsed_elemets_tuples, width, height){
 
   var i = 0;
   //track the states that should be added to the table
@@ -682,7 +679,7 @@ function college_expense_bar_chart(parsed_elemets_tuples){
     	.on("change", function(d){
         selection = document.getElementById("dropdown2");
 
-        update_bar_chart_expense(parsed_elemets_tuples, selection.value);
+        update_bar_chart_expense(parsed_elemets_tuples, selection.value, width, height);
 
          });
 
@@ -1364,7 +1361,7 @@ switch (order) {
 }
 
 //update bar chart 1
-function update_bar_chart(parsed_elemets_tuples, selection){
+function update_bar_chart(parsed_elemets_tuples, selection, width, height){
 
   //y-axis description
   var description = "temp";
@@ -1662,7 +1659,7 @@ function update_bar_chart(parsed_elemets_tuples, selection){
 }
 
 //update bar chart 2
-function update_bar_chart_expense(parsed_elemets_tuples, selection){
+function update_bar_chart_expense(parsed_elemets_tuples, selection, width, height){
 
   //y-axis description
   var description = "temp";
