@@ -109,6 +109,8 @@ function selectState(){
       onclick="deselectListItem('${valueEntered}')">` +
       '&#215;</button>' + '</li>' + selectedStates.innerHTML
   }
+  // Clear state selection input
+  document.getElementById('stateInput').value = "";
 }
 
 // =================== code for handling school selection ====================
