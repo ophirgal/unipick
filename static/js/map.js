@@ -33,8 +33,14 @@ function submitForm(centerPerson=0){
 }
 
 function compareSchools(){
-  // Send list of selected schools to parent page
-  window.top.postMessage(getSelectedSchools(), '*')
+  let selectedSchools = getSelectedSchools()
+  // Ensure user selected at least 2 schools
+  if (selectedSchools.length < 2){
+    alert("You must select at least 2 schools for comparison!")
+  } else {
+    // Send list of selected schools to parent page
+    window.top.postMessage(selectedSchools, '*')
+  }
 }
 
 function _trimButton(listItemString){
