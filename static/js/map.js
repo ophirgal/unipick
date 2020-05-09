@@ -248,7 +248,7 @@ function renderMapViz(schoolData, geoData, filters) {
     geoData.features[j].properties.visited = 
       filters.selectedStates.includes(geoState) ? 1 : 0;
   }
-      
+        
   // Bind the data to the SVG and create one path per GeoJSON feature
   svg.selectAll("path")
     .data(geoData.features)
@@ -284,11 +284,12 @@ function renderMapViz(schoolData, geoData, filters) {
     .style("fill", "rgb(102,51,153)")	
     .style("opacity", 0.65)	
     .on("click", d => selectSchool(d))   
-    // Modification of custom tooltip code provided by Malcolm Maclean, "D3 Tips and Tricks" 
+    // Modification of custom tooltip code provided by Malcolm Maclean, 
+    // "D3 Tips and Tricks" 
     // http://www.d3noob.org/2013/01/adding-tooltips-to-d3js-graph.html
     .on("mouseover", function(d) {      
         div.transition()        
-            .duration(200)      
+            .duration(100)      
             .style("opacity", .9);      
             div.text(d.Name)
             .style("left", (d3.event.pageX + 10) + "px")     
@@ -300,9 +301,9 @@ function renderMapViz(schoolData, geoData, filters) {
     // fade out tooltip on mouse out               
     .on("mouseout", function(d) {       
         div.transition()        
-          .duration(500)      
+          .duration(200)      
           .style("opacity", 0);   
-    });
+    })
           
   // Modified Legend Code from Mike Bostock: http://bl.ocks.org/mbostock/3888852
   var legend = d3.select("body").append("svg")
@@ -327,4 +328,29 @@ function renderMapViz(schoolData, geoData, filters) {
         .attr("y", 9)
         .attr("dy", ".35em")
         .text(function(d) { return d; });
+  
+  // Add zoom and pan functionality
+  svg.call(d3.behavior.zoom()
+     .translate(projection.translate())
+     .scale(projection.scale())
+     .on("zoom", redraw));
+  
+  function redraw() {
+    if (d3.event) {
+      projection
+          .translate(d3.event.translate)
+          .scale(d3.event.scale);
+    }
+    svg.selectAll("path").attr("d", path);
+    var t = projection.translate();
+    schoolElements
+    .attr("x", function(d) {
+      return projection([d["Longitude location of institution"],
+                         d["Latitude location of institution"]])[0];
+    })
+    .attr("y", function(d) {
+      return projection([d["Longitude location of institution"],
+                         d["Latitude location of institution"]])[1];
+    })
+  }
 }
