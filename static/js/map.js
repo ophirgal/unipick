@@ -301,7 +301,7 @@ function renderMapViz(schoolData, geoData, filters) {
     // fade out tooltip on mouse out               
     .on("mouseout", function(d) {       
         div.transition()        
-          .duration(200)      
+          .duration(100)      
           .style("opacity", 0);   
     })
           
