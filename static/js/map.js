@@ -283,7 +283,15 @@ function renderMapViz(schoolData, geoData, filters) {
     })
     .style("fill", "rgb(102,51,153)")	
     .style("opacity", 0.65)	
-    .on("click", d => selectSchool(d))   
+    .on("click", d => selectSchool(d))
+    .on("mousedown", d => {
+      schoolElements.style('stroke', s => s.Name == d.Name ? 'white' : 'none');
+      schoolElements.style('stroke-width', s => s.Name == d.Name ? '50' : '0');
+    })
+    .on("mouseup", d => {
+      schoolElements.style('stroke', 'none');
+      schoolElements.style('stroke-width', '0');
+    })      
     // Modification of custom tooltip code provided by Malcolm Maclean, 
     // "D3 Tips and Tricks" 
     // http://www.d3noob.org/2013/01/adding-tooltips-to-d3js-graph.html
@@ -291,7 +299,7 @@ function renderMapViz(schoolData, geoData, filters) {
         div.transition()        
             .duration(100)      
             .style("opacity", .9);      
-            div.text(d.Name)
+        div.text(d.Name)
             .style("left", (d3.event.pageX + 10) + "px")     
             .style("top", (d3.event.pageY - 28) + "px"); 
         schoolElements.style('opacity', s => s.Name == d.Name ? 1 : 0.65);
@@ -303,6 +311,7 @@ function renderMapViz(schoolData, geoData, filters) {
         div.transition()        
           .duration(100)      
           .style("opacity", 0);   
+        schoolElements.style('fill', 'rgb(102,51,153)');
     })
           
   // Modified Legend Code from Mike Bostock: http://bl.ocks.org/mbostock/3888852
