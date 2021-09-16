@@ -21,7 +21,7 @@ function getData(input_Array) {
   //clear the canvas
   d3.selectAll("svg > *").remove();
 
-  d3.json("http://localhost:8080/").then(function(data){
+  d3.json("data/IPEDS_data_extended.json").then(function(data){
     renderVisualization(data.ipeds_data, input_Array);
   });
 
